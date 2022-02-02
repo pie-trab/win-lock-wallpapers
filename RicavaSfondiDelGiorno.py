@@ -2,11 +2,13 @@ import os
 import shutil
 from PIL import Image
 
+userPath = os.getenv('USERPROFILE')
+
 # destination directory chosen by the user
-wallpaperDir = 'C:\\Users\\Pietro\\Pictures\\Sfondi\\Sfondi_Windows10'
+wallpaperDir = userPath + '\\Pictures\\Sfondi\\Sfondi_Windows10'
 
 # asset dyrectory where the lockscreen files are stored
-assetsDir = 'C:\\Users\\Pietro\\AppData\\Local\\Packages\\Microsoft.Windows.ContentDeliveryManager_cw5n1h2txyewy\\LocalState\\Assets'
+assetsDir = userPath + '\\AppData\\Local\\Packages\\Microsoft.Windows.ContentDeliveryManager_cw5n1h2txyewy\\LocalState\\Assets'
 
 
 def checkAspectRatio(file):
