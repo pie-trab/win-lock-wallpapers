@@ -13,7 +13,7 @@ After discarding some useless files (in this directory are stored the banner for
 
 Set the wallpaper dir to whatever you like the default is under "user\Pictures\LockScreenWallpapers" and it will be automatically created
 
-```
+```python
 # destination directory, the folder will be created if doesn't exits
 wallpaperDir = userPath + "\\Pictures\\Sfondi\\Sfondi_Windows10"
 ```
