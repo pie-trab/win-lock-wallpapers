@@ -9,6 +9,10 @@ asset_dir = os.path.join(user_path, "AppData", "Local", "Packages", "Microsoft.W
 
 After discarding some useless files (in this directory are stored the banner for the preinstalled ads in windows and other stuff) moves the wallpapers to a user set directory.
 
+## Requirements
+
+You will need the [PIL ](https://pypi.org/project/pillow/)library.
+
 ## Usage
 
 Set the wallpaper dir to whatever you like the default is under "user\Pictures\LockScreenWallpapers" and it will be automatically created
