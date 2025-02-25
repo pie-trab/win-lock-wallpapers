@@ -9,9 +9,11 @@ asset_dir = os.path.join(user_path, "AppData", "Local", "Packages", "Microsoft.W
 
 After discarding some useless files (in this directory are stored the banner for the preinstalled ads in windows and other stuff) moves the wallpapers to a user set directory.
 
-## Requirements
+## Installation 
 
-You will need the [PIL ](https://pypi.org/project/pillow/)library.
+Install [PIL](https://pypi.org/project/pillow/) library.
+
+```pip install PIL
 
 ## Usage
 

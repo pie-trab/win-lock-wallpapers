@@ -1,17 +1,19 @@
 import os
+from pathlib import Path
 import shutil
 import hashlib
 from PIL import Image
 
-# up to 9999 wallpers
-user_path = os.getenv("USERPROFILE")
+# up to 9999 wallpers (5 zeros)
+rjust_padding = 5
 
-# default directory, this folder will be created if doesn't exits
-wallpaper_dir = os.path.join(user_path, "Pictures", "WinWallpaper")
+user_home = Path.home() 
 
 # asset directory
 # in this directory are contained windows lockscreen wallpapers and some other stuff
-asset_dir = os.path.join(user_path, "AppData", "Local", "Packages", "Microsoft.Windows.ContentDeliveryManager_cw5n1h2txyewy", "LocalState", "Assets")
+asset_dir = user_home / 'AppData/Local/Packages/Microsoft.Windows.ContentDeliveryManager_cw5n1h2txyewy/LocalState/Assets'
+
+user_home = user_home / 'Pictures'
 
 def valid_wallpaper(file, get_mobile):
     """ Checks the aspect ratio to discard usless images and optionally mobile wallpapers (1080x1920 vertical)
@@ -50,45 +52,52 @@ def get_sha256(file):
     return file_hash.hexdigest()  # Get the hexadecimal digest of the hash
 
 
+def main():
+    print("Keep phone wallpapers? [N/y]")
+    get_phone = input()
 
-print("Keep phone wallpapers? [Y/N] - Default no")
-get_phone = input()
+    # ask to keep phone wallpapers too
+    try:
+        get_phone = get_phone[0].upper() == "Y"
+    except IndexError:
+        get_phone = False
 
-# ask to keep phone wallpapers too
-if get_phone.upper() == "Y":
-    get_phone = True
-else:
-    get_phone = False
+    # creation of destination folder if doesn't exists
+    # default directory, this folder will be created if doesn't exits
+    wallpaper_dir = user_home / 'win-lock-wallpapers'
 
-# creation of destination folder if doesn't exists
-if not os.path.isdir(wallpaper_dir):
-    os.mkdir(wallpaper_dir)
-    print("Destination folder not found. Folder " + wallpaper_dir + " created.")
+    if not wallpaper_dir.exists():
+        user_home / 'win-lock-wallpapers'.mkdir(parents=True, exist_ok=True)
+        print(f'Output folder created at {user_home}')
+    else:
+        print(f'Output folder found at {user_home}')
 
-# all file in asset
-file_list_asset = {}
-for i in os.scandir(asset_dir):
-    if i.is_file() and valid_wallpaper(i.path, get_phone):
-        file_list_asset[get_sha256(i.path)] = i
+    # all file in asset
+    file_list_asset = {}
+    for i in os.scandir(asset_dir):
+        if i.is_file() and valid_wallpaper(i.path, get_phone):
+            file_list_asset[get_sha256(i.path)] = i
 
-# all files alredy in wallpaper dir
-file_list_wallpaper = {}
-for i in os.scandir(wallpaper_dir):
-    if i.is_file():
-        file_list_wallpaper[get_sha256(i.path)] = i
+    # all files alredy in wallpaper dir
+    file_list_wallpaper = {}
+    for i in os.scandir(wallpaper_dir):
+        if i.is_file():
+            file_list_wallpaper[get_sha256(i.path)] = i
 
-# finds the intersection of the two dictionaries   
-to_move = file_list_asset.keys() - file_list_wallpaper.keys()
+    # finds the intersection of the two dictionaries   
+    to_move = file_list_asset.keys() - file_list_wallpaper.keys()
 
-init_count = len(file_list_wallpaper) + 1
+    init_count = len(file_list_wallpaper) + 1
 
-# move and rename all not duplicate wallpaper
-for i in to_move:
-    shutil.copy(file_list_asset[i].path, wallpaper_dir)
-    wallpaper_name ="Lockscreen"+ str(init_count).rjust(5, "0") + ".jpg"
-    print("Added " + wallpaper_name)
-    os.rename(os.path.join(wallpaper_dir, file_list_asset[i].name), os.path.join(wallpaper_dir, wallpaper_name))
-    init_count += 1
+    # move and rename all not duplicate wallpaper
+    for i in to_move:
+        shutil.copy(file_list_asset[i].path, wallpaper_dir)
+        wallpaper_name ="Lockscreen"+ str(init_count).rjust(rjust_padding, "0") + ".jpg"
+        print("Added " + wallpaper_name)
+        os.rename(os.path.join(wallpaper_dir, file_list_asset[i].name), os.path.join(wallpaper_dir, wallpaper_name))
+        init_count += 1
 
 
-input("Press any key to exit...")
+    input("Press any key to exit...")
+
+main()
