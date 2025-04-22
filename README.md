@@ -9,7 +9,7 @@ asset_dir = user_home / 'AppData/Local/Packages/Microsoft.Windows.ContentDeliver
 
 After discarding some useless files (in this directory are stored the banner for the preinstalled ads in windows and other stuff) moves the wallpapers to the output directory.
 
-## Installation 
+## Requirements 
 
 Install [PIL](https://pypi.org/project/pillow/) library.
 
